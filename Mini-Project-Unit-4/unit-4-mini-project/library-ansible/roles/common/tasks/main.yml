@@ -1,0 +1,42 @@
+---
+# ==============================================================================
+# Role: common - Tasks
+# ==============================================================================
+
+- name: Update apt package cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install system utilities
+  ansible.builtin.apt:
+    name:
+      - curl
+      - wget
+      - git
+      - ufw
+      - jq
+      - unzip
+      - ca-certificates
+      - software-properties-common
+      - python3-pip
+      - sqlite3
+    state: present
+
+- name: Allow SSH through UFW
+  community.general.ufw:
+    rule: allow
+    port: "22"
+    proto: tcp
+
+- name: Allow HTTP through UFW
+  community.general.ufw:
+    rule: allow
+    port: "80"
+    proto: tcp
+
+- name: Allow application port through UFW
+  community.general.ufw:
+    rule: allow
+    port: "5000"
+    proto: tcp

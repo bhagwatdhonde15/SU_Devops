@@ -1,0 +1,72 @@
+---
+# ==============================================================================
+# Role: library_app - Tasks
+# ==============================================================================
+
+- name: Ensure Docker service is running
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Create application directory
+  ansible.builtin.file:
+    path: "{{ host_app_dir | default('/opt/library') }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Copy application files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ host_app_dir | default('/opt/library') }}/{{ item }}"
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - app.py
+    - requirements.txt
+    - Dockerfile
+
+- name: Create persistent database directory
+  ansible.builtin.file:
+    path: "{{ host_data_dir | default('/opt/library/data') }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0777"
+
+- name: Build library application image
+  community.docker.docker_image:
+    name: smart-library
+    tag: latest
+    build:
+      path: "{{ host_app_dir | default('/opt/library') }}"
+    source: build
+    state: present
+
+- name: Run library application container
+  community.docker.docker_container:
+    name: smart-library-app
+    image: smart-library:latest
+    state: started
+    restart_policy: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - "{{ host_data_dir | default('/opt/library/data') }}:/opt/library/data"
+    env:
+      DATABASE_PATH: "/opt/library/data/library.db"
+      PORT: "5000"
+
+- name: Verify library application health
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:5000/api/health"
+    method: GET
+    status_code: 200
+    return_content: true
+  register: health_check
+  retries: 5
+  delay: 3
+  until: health_check.status == 200

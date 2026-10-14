@@ -1,0 +1,18 @@
+---
+# ==============================================================================
+# Role: docker - Tasks
+# ==============================================================================
+
+- name: Install Docker
+  ansible.builtin.apt:
+    name:
+      - docker.io
+      - python3-docker
+    state: present
+    update_cache: true
+
+- name: Start and enable Docker
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true

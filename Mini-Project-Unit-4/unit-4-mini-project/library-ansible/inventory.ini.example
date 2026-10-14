@@ -1,0 +1,14 @@
+# ==============================================================================
+# Enterprise Smart Library Management Platform - Inventory Template Example
+# ==============================================================================
+
+[smart_library]
+# <YOUR_EC2_PUBLIC_IP> ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/library-aws-key
+EC2_PUBLIC_IP_HERE ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/library-aws-key ansible_python_interpreter=/usr/bin/python3
+
+[smart_library:vars]
+app_name=smart-library
+app_port=5000
+host_app_dir=/opt/library
+host_data_dir=/opt/library/data
+db_filename=library.db

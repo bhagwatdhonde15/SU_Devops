@@ -1,0 +1,36 @@
+# Terraform Local and Cache Files
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+!*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
+
+# Ansible Cache
+*.retry
+.ansible/
+__pycache__/
+*.py[cod]
+
+# SSH Keys & Secrets
+*.pem
+*.key
+library-aws-key
+library-aws-key.pub
+
+# Databases & Virtual Environments
+*.db
+*.sqlite3
+venv/
+.venv/
+env/
+
+# OS specific files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,23 @@
+---
+# ==============================================================================
+# Enterprise Smart Library Management Platform - Master Playbook
+# Unit 4: Infrastructure Automation
+# Student: Bhagwat Dhonde (PRN: 2125UMLM1015)
+# ==============================================================================
+
+- name: Configure Smart Library Server
+  hosts: smart_library
+  become: true
+  gather_facts: true
+
+  vars:
+    app_dir: /opt/library
+    data_dir: /opt/library/data
+    app_port: 5000
+    nginx_port: 80
+
+  roles:
+    - common
+    - docker
+    - nginx
+    - library_app
